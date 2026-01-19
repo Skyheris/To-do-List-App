@@ -1,0 +1,114 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    Tasks Overview
+{% endblock %}
+
+{% block body %}
+<div class="container mt-5"> <div class="text-center mb-4">
+        <h2>As Minhas Tarefas</h2>
+    </div>
+
+    <div class="table-responsive shadow-sm rounded"> <table class="table table-striped table-hover align-middle"> <thead class="table-dark">
+                <tr>
+                    <th class="text-start">Tarefa</th>
+                    <th>Descrição</th>
+                    <th class="text-center">Estado</th>
+                    <th class="text-center">Data Limite</th>
+                    <th class="text-end">Ações</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for task in tasks %}
+                <tr>
+                    <td class="text-start fw-bold">{{ task["titulo"] }}</td>
+                    <td>{{ task["descricao"] }}</td>
+                    <td class="text-center">
+                        {% if task["concluida"] %}
+                            <span class="badge bg-success"><i class="bi bi-check-circle"></i> Feito</span>
+                        {% else %}
+                            <span class="badge bg-warning text-dark"><i class="bi bi-clock"></i> Pendente</span>
+                        {% endif %}
+                    </td>
+                    <td class="text-center text-muted">{{ task["data_limite"] }}</td>
+
+                    <td class="text-end">
+                        <div class="d-flex gap-2 justify-content-end">
+                            <form action="/conclude" method="post">
+                                <input type="hidden" name="task_id" value="{{ task['id'] }}">
+                                <button title="Concluir" class="btn btn-outline-success btn-sm" type="submit">
+                                    <i class="bi bi-check-lg"></i>
+                                </button>
+                            </form>
+
+                            <button title="Editar" class="btn btn-outline-primary btn-sm btn-edit"
+                                    data-id="{{ task['id'] }}"
+                                    data-titulo="{{ task['titulo'] }}">
+                                <i class="bi bi-pencil"></i>
+                            </button>
+
+                            <form action="/removetask" method="post">
+                                <input type="hidden" name="task_id" value="{{ task['id'] }}">
+                                <button title="Remover" class="btn btn-outline-danger btn-sm" type="submit">
+                                    <i class="bi bi-trash"></i>
+                                </button>
+                            </form>
+                        </div>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+<div class="modal fade" id="modalEditar" tabindex="-1" aria-labelledby="modalEditarLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content border-0 shadow-lg">
+            <div class="modal-header bg-primary text-white">
+                <h5 class="modal-title" id="modalEditarLabel"><i class="bi bi-pencil-square"></i> Editar Tarefa</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <form action="/edit_task" method="post">
+                <div class="modal-body p-4">
+                    <input type="hidden" name="task_id" id="edit-id">
+
+                    <div class="mb-3">
+                        <label for="edit-titulo" class="form-label fw-bold">Título</label>
+                        <input type="text" class="form-control" name="titulo" id="edit-titulo" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="edit-descricao" class="form-label fw-bold">Descrição</label>
+                        <textarea class="form-control" name="descricao" id="edit-descricao" rows="3"></textarea>
+                    </div>
+                </div>
+                <div class="modal-footer bg-light">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                    <button type="submit" class="btn btn-primary px-4">Guardar Alterações</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+
+    const editButtons = document.querySelectorAll('.btn-edit');
+
+    editButtons.forEach(button => {
+        button.addEventListener('click', function() {
+
+            const id = this.getAttribute('data-id');
+            const titulo = this.getAttribute('data-titulo');
+            const descricao = this.getAttribute('data-descricao');
+
+            document.getElementById('edit-id').value = id;
+            document.getElementById('edit-titulo').value = titulo;
+            document.getElementById('edit-descricao').value = descricao;
+
+            const myModal = new bootstrap.Modal(document.getElementById('modalEditar'));
+            myModal.show();
+        });
+    });
+});
+</script>
+{% endblock %}

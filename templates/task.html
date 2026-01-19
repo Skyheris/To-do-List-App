@@ -1,0 +1,40 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    Adicionar Tarefa
+{% endblock %}
+
+{% block body %}
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <h2 class="mb-4">Nova Tarefa</h2>
+
+            <form action="/add_task" method="post" class="card p-4 shadow-sm">
+
+                <div class="mb-3">
+                    <label for="titulo" class="form-label">Título da Tarefa</label>
+                    <input type="text" name="titulo" id="titulo" class="form-control" placeholder="Qual objetivo queres apontar?" required autocomplete="off">
+                </div>
+
+                <div class="mb-3">
+                    <label for="descricao" class="form-label">Descrição (Opcional)</label>
+                    <textarea name="descricao" id="descricao" rows="3" class="form-control" placeholder="Detalhes adicionais..." autocomplete="off"></textarea>
+                </div>
+
+                <div class="mb-3">
+                    <label for="data_limite" class="form-label">Data e Hora Limite</label>
+                    <input type="datetime-local" name="data_limite" class="form-control" autocomplete="off">
+                </div>
+
+                <div class="d-grid gap-2">
+                    <button type="submit" class="btn btn-primary">
+                        <i class="bi bi-plus-circle"></i> Criar Tarefa
+                    </button>
+                    <a href="/" class="btn btn-outline-secondary">Cancelar</a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}
